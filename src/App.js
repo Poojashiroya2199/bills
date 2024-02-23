@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Original from "./OriginalImage";
+import "./index.css";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Download from "./Download";
 
-function App() {
+export default function App() {
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    setSelectedFiles([...selectedFiles, ...files]);
+  };
+
+  const handleUpload = () => {
+    selectedFiles.forEach((file) => {
+      console.log("Selected Files:", file);
+    });
+  };
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <div>
+          <h1>Hello World</h1>
+          <Original
+            selectedFiles={selectedFiles}
+            handleFileChange={handleFileChange}
+            handleUpload={handleUpload}
+          />
+        </div>
+      ),
+    },
+    {
+      path: "/download",
+      element: <Download selectedFiles={selectedFiles} />,
+    },
+  ]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <RouterProvider router={router} />
     </div>
   );
 }
-
-export default App;
